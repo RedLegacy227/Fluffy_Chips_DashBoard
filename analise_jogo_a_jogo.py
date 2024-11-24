@@ -4,27 +4,31 @@ from datetime import date
 
 # Helper functions
 def drop_reset_index(df):
-    """Remove valores nulos e redefine o índice."""
+    #Remove valores nulos e redefine o índice."""
     df = df.dropna()
     df = df.reset_index(drop=True)
     df.index += 1
     return df
 
 def read_jogos(dia):
-    jogos_do_dia = pd.read_csv(f'https://raw.githubusercontent.com/RedLegacy227/jogos_do_dia/refs/heads/main/Jogos_Flashscore_' + str(dia) + '.csv')
+    # Convert date to string format for the URL
+    dia_str = dia.strftime('%Y-%m-%d')
+    base_url = "https://raw.githubusercontent.com/RedLegacy227/df_jogos_do_dia/refs/heads/main/"
+    file_name = f"df_jogos_do_dia_{dia_str}.csv"
+    file_url = base_url + file_name
+    
     try:
-        jogos_do_dia = jogos_do_dia[['League', 'Date', 'Time', 'Home', 'Away', 'FT_Odd_H', 'FT_Odd_D', 'FT_Odd_A','HT_Odd_Over05', 'HT_Odd_Under05', 'FT_Odd_Over15','FT_Odd_Under15','FT_Odd_Over25','FT_Odd_Under25', 'Odd_BTTS_Yes', 'Odd_BTTS_No']]
+        jogos_do_dia = pd.read_csv(file_url)
         jogos_do_dia = drop_reset_index(jogos_do_dia)
-    except:
-        jogos_do_dia = jogos_do_dia[['League', 'Date', 'Time', 'Home', 'Away', 'FT_Odd_H', 'FT_Odd_D', 'FT_Odd_A','HT_Odd_Over05', 'HT_Odd_Under05', 'FT_Odd_Over15','FT_Odd_Under15','FT_Odd_Over25','FT_Odd_Under25', 'Odd_BTTS_Yes', 'Odd_BTTS_No']]
-        jogos_do_dia.columns = ['League', 'Date', 'Time', 'Home', 'Away', 'FT_Odd_H', 'FT_Odd_D', 'FT_Odd_A','HT_Odd_Over05', 'HT_Odd_Under05', 'FT_Odd_Over15','FT_Odd_Under15','FT_Odd_Over25','FT_Odd_Under25', 'Odd_BTTS_Yes', 'Odd_BTTS_No']
-        jogos_do_dia = drop_reset_index(jogos_do_dia)
-    st.dataframe(jogos_do_dia)
+
+    except Exception as e:
+        st.error(f"Error loading data: {e}")
+        jogos_do_dia = pd.DataFrame()  # Return empty DataFrame if error
 
     return jogos_do_dia
 
 def read_base_de_dados():
-    """Carrega a base de dados principal com colunas selecionadas."""
+    #Carrega a base de dados principal com colunas selecionadas."""
     url = "https://raw.githubusercontent.com/RedLegacy227/base_de_dados_fluffy_chips/refs/heads/main/fluffy_chips_2018_2024.csv"
     colunas_selecionadas = [
         "Date", "League", "Season", "Home", "Away", "HT_Goals_H", "HT_Goals_A", "FT_Goals_H", "FT_Goals_A",
@@ -43,7 +47,7 @@ def read_base_de_dados():
 
 # Main dashboard
 def show_analise_jogo_a_jogo():
-    """Exibe o painel principal para análise jogo a jogo."""
+    #Exibe o painel principal para análise jogo a jogo."""
     st.title("Fluffy Chips Dashboard")
 
     # Seção: Seleção de Data
