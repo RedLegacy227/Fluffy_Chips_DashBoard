@@ -79,7 +79,9 @@ def show_analise_jogo_a_jogo():
                 
                 # Exibir dados completos do jogo selecionado
                 st.subheader("Dados do Jogo Selecionado")
-                st.dataframe(row)
+                # Transformar a linha em um DataFrame para exibir como tabela
+                jogo_selecionado_df = pd.DataFrame([row])
+                st.dataframe(jogo_selecionado_df)
                 # Histórico de Confrontos Diretos
                 st.subheader(f"Histórico de Confrontos Diretos entre {equipe_selecionada} e {adversario}")
                 
