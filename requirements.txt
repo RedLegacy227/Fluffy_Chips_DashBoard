@@ -3,6 +3,5 @@ streamlit-aggrid
 pandas
 numpy
 datetime
-plotly.express
-plotly.graph_objects
+plotly
 seaborn
