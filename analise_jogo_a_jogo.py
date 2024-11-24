@@ -16,8 +16,8 @@ def read_jogos(dia):
     file_url = base_url + file_name
     
     try:
-        # Carregar o DataFrame sem índice adicional
         jogos_do_dia = pd.read_csv(file_url)
+        jogos_do_dia = drop_reset_index(jogos_do_dia)
     except Exception as e:
         st.error(f"Erro ao carregar dados dos jogos do dia: {e}")
         jogos_do_dia = pd.DataFrame()  # Retorna DataFrame vazio no caso de erro
