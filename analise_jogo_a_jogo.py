@@ -11,22 +11,15 @@ def drop_reset_index(df):
     return df
 
 def read_jogos(dia):
-    """Carrega os jogos do dia a partir de um arquivo remoto."""
-    dia_str = dia.strftime('%Y-%m-%d')
-    base_url = "https://raw.githubusercontent.com/RedLegacy227/df_jogos_do_dia/refs/heads/main/"
-    file_name = f"df_jogos_do_dia_{dia_str}.csv"
-    file_url = base_url + file_name
-
+    jogos_do_dia = pd.read_csv(f'https://raw.githubusercontent.com/RedLegacy227/jogos_do_dia/refs/heads/main/Jogos_Flashscore_' + str(dia) + '.csv')
     try:
-        jogos_do_dia = pd.read_csv(file_url)
-        
-        # Ajustar cabeçalhos e limpar dados
-        #jogos_do_dia.columns = jogos_do_dia.iloc[0]  # Usar a primeira linha como cabeçalhos
-        #jogos_do_dia = jogos_do_dia[1:]  # Remover a primeira linha de dados (agora é cabeçalho)
-        jogos_do_dia = drop_reset_index(jogos_do_dia)  # Resetar índices e limpar
-    except Exception as e:
-        st.error(f"Erro ao carregar dados dos jogos do dia: {e}")
-        jogos_do_dia = pd.DataFrame()  # Retorna DataFrame vazio no caso de erro
+        jogos_do_dia = jogos_do_dia[['League', 'Date', 'Time', 'Home', 'Away', 'FT_Odd_H', 'FT_Odd_D', 'FT_Odd_A','HT_Odd_Over05', 'HT_Odd_Under05', 'FT_Odd_Over15','FT_Odd_Under15','FT_Odd_Over25','FT_Odd_Under25', 'Odd_BTTS_Yes', 'Odd_BTTS_No']]
+        jogos_do_dia = drop_reset_index(jogos_do_dia)
+    except:
+        jogos_do_dia = jogos_do_dia[['League', 'Date', 'Time', 'Home', 'Away', 'FT_Odd_H', 'FT_Odd_D', 'FT_Odd_A','HT_Odd_Over05', 'HT_Odd_Under05', 'FT_Odd_Over15','FT_Odd_Under15','FT_Odd_Over25','FT_Odd_Under25', 'Odd_BTTS_Yes', 'Odd_BTTS_No']]
+        jogos_do_dia.columns = ['League', 'Date', 'Time', 'Home', 'Away', 'FT_Odd_H', 'FT_Odd_D', 'FT_Odd_A','HT_Odd_Over05', 'HT_Odd_Under05', 'FT_Odd_Over15','FT_Odd_Under15','FT_Odd_Over25','FT_Odd_Under25', 'Odd_BTTS_Yes', 'Odd_BTTS_No']
+        jogos_do_dia = drop_reset_index(jogos_do_dia)
+    st.dataframe(jogos_do_dia)
 
     return jogos_do_dia
 
