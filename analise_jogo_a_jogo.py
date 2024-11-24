@@ -33,7 +33,7 @@ def read_base_de_dados():
         base_dados = pd.DataFrame()  # Retorna DataFrame vazio no caso de erro
     return base_dados
 
-# Main dashboard
+# Função principal para a página
 def show_analise_jogo_a_jogo():
     st.title("Fluffy Chips Dashboard")
     
@@ -48,14 +48,20 @@ def show_analise_jogo_a_jogo():
     base_dados = read_base_de_dados()
     
     if not jogos_do_dia.empty and not base_dados.empty:
+        # Filtrar dados da base até o dia anterior ao selecionado
+        dia_anterior = pd.to_datetime(dia) - pd.Timedelta(days=1)
+        base_filtrada = base_dados[pd.to_datetime(base_dados['Date']) <= dia_anterior]
+        
         # Seção: Seleção de equipe
-        st.subheader("Selecione a equipe")
+        st.subheader("Selecione a equipe para análise detalhada")
         equipes_casa = jogos_do_dia['Home'].unique()
         equipe_selecionada = st.selectbox("Equipe da Casa:", sorted(equipes_casa))
         
         if equipe_selecionada:
             # Exibir jogos do dia para a equipe selecionada
+            st.subheader(f"Jogos do Dia para {equipe_selecionada}")
             jogos_equipe_casa = jogos_do_dia[jogos_do_dia['Home'] == equipe_selecionada]
+            st.dataframe(jogos_equipe_casa)
             
             for index, row in jogos_equipe_casa.iterrows():
                 adversario = row['Away']
@@ -69,9 +75,9 @@ def show_analise_jogo_a_jogo():
                 
                 # Histórico de Confrontos Diretos
                 st.subheader(f"Histórico de Confrontos Diretos entre {equipe_selecionada} e {adversario}")
-                h2h = base_dados[
-                    (base_dados['Home'] == equipe_selecionada) & 
-                    (base_dados['Away'] == adversario)
+                h2h = base_filtrada[
+                    (base_filtrada['Home'] == equipe_selecionada) & 
+                    (base_filtrada['Away'] == adversario)
                 ].sort_values(by='Date', ascending=False)
                 if not h2h.empty:
                     st.dataframe(h2h)
@@ -80,8 +86,8 @@ def show_analise_jogo_a_jogo():
                 
                 # Últimos 5 jogos da equipe da casa
                 st.subheader(f"Últimos 5 jogos da equipe da casa ({equipe_selecionada})")
-                ultimos_jogos_casa = base_dados[
-                    (base_dados['Home'] == equipe_selecionada)
+                ultimos_jogos_casa = base_filtrada[
+                    (base_filtrada['Home'] == equipe_selecionada)
                 ].sort_values(by='Date', ascending=False).head(5)
                 if not ultimos_jogos_casa.empty:
                     st.dataframe(ultimos_jogos_casa)
@@ -90,8 +96,8 @@ def show_analise_jogo_a_jogo():
                 
                 # Últimos 5 jogos da equipe visitante
                 st.subheader(f"Últimos 5 jogos da equipe visitante ({adversario})")
-                ultimos_jogos_visitante = base_dados[
-                    (base_dados['Away'] == adversario)
+                ultimos_jogos_visitante = base_filtrada[
+                    (base_filtrada['Away'] == adversario)
                 ].sort_values(by='Date', ascending=False).head(5)
                 if not ultimos_jogos_visitante.empty:
                     st.dataframe(ultimos_jogos_visitante)
@@ -101,17 +107,14 @@ def show_analise_jogo_a_jogo():
                 # Jogos Passados com Odds Semelhantes
                 st.subheader(f"Jogos Passados com Odds Semelhantes ({equipe_selecionada} vs {adversario})")
                 odd_margin = 0.1
-                jogos_odds_semelhantes = base_dados[
-                    (base_dados['Home'] == equipe_selecionada) & 
-                    (base_dados['Away'] == adversario) &
-                    (base_dados['FT_Odd_H'].between(odd_home - odd_margin, odd_home + odd_margin)) &
-                    (base_dados['FT_Odd_A'].between(odd_away - odd_margin, odd_away + odd_margin))
+                jogos_odds_semelhantes = base_filtrada[
+                    (base_filtrada['Home'] == equipe_selecionada) & 
+                    (base_filtrada['Away'] == adversario) &
+                    (base_filtrada['FT_Odd_H'].between(odd_home - odd_margin, odd_home + odd_margin)) &
+                    (base_filtrada['FT_Odd_A'].between(odd_away - odd_margin, odd_away + odd_margin))
                 ].sort_values(by='Date', ascending=False)
                 if not jogos_odds_semelhantes.empty:
                     st.dataframe(jogos_odds_semelhantes)
                 else:
                     st.write("Nenhum jogo passado com odds semelhantes encontrado.")
 
-# Run the dashboard
-if __name__ == "__main__":
-    show_analise_jogo_a_jogo()

@@ -48,57 +48,49 @@ def show_analise_correct_score():
     base_dados = read_base_de_dados()
     
     if not jogos_do_dia.empty and not base_dados.empty:
+        # Filtrar dados da base até o dia anterior ao selecionado
+        dia_anterior = pd.to_datetime(dia) - pd.Timedelta(days=1)
+        base_filtrada = base_dados[pd.to_datetime(base_dados['Date']) <= dia_anterior]
+        
         # Seleção da Equipe para Análise
         st.subheader("Selecione a equipe para análise detalhada")
         equipes_casa = jogos_do_dia['Home'].unique()
         equipe_selecionada = st.selectbox("Equipe da Casa:", sorted(equipes_casa))
+    
+    if equipe_selecionada:
+        # Exibir Jogos do Dia para a Equipe Selecionada
+        st.subheader(f"Jogos do Dia para {equipe_selecionada}")
+        jogos_equipe_casa = jogos_do_dia[jogos_do_dia['Home'] == equipe_selecionada]
+        st.dataframe(jogos_equipe_casa)
         
-        if equipe_selecionada:
-            # Exibir Jogos do Dia para a Equipe Selecionada
-            st.subheader(f"Jogos do Dia para {equipe_selecionada}")
-            jogos_equipe_casa = jogos_do_dia[jogos_do_dia['Home'] == equipe_selecionada]
-            st.dataframe(jogos_equipe_casa)
+        for index, jogo in jogos_equipe_casa.iterrows():
+            adversario = jogo['Away']
+            st.write(f"**Analisando Jogo: {equipe_selecionada} (Home) vs {adversario} (Away)**")
             
-            # Análise de Frequência de Resultados
-            st.subheader(f"Frequência de Resultados - {equipe_selecionada}")
-            resultados = base_dados[base_dados['Home'] == equipe_selecionada]
-            resultados['Resultado'] = resultados.apply(lambda row: f"{row['FT_Goals_H']}x{row['FT_Goals_A']}", axis=1)
-            
-            freq_resultados = resultados['Resultado'].value_counts()
-            st.bar_chart(freq_resultados)
-            
-            # Legenda dos Resultados
-            st.subheader("Legenda dos Resultados")
-            for resultado, freq in freq_resultados.items():
-                if freq == 0:
-                    mensagem = "Limpinho (0)"
-                elif 1 <= freq <= 3:
-                    mensagem = "Favorável"
-                elif 4 <= freq <= 7:
-                    mensagem = "Cuidado"
-                elif 8 <= freq <= 10:
-                    mensagem = "Muito Cuidado"
-                else:
-                    mensagem = "Não Entrar"
-                st.write(f"Resultado {resultado}: {mensagem}")
-            
-            # Goleadas Separadas
-            st.subheader(f"Goleadas de {equipe_selecionada}")
+            # **Análise para a Equipe da Casa (Home)**
+            st.subheader(f"Frequência de Resultados - {equipe_selecionada} (Home)")
+            resultados_home = base_filtrada[base_filtrada['Home'] == equipe_selecionada]
+            resultados_home['Resultado'] = resultados_home.apply(lambda row: f"{row['FT_Goals_H']}x{row['FT_Goals_A']}", axis=1)
+            freq_resultados_home = resultados_home['Resultado'].value_counts()
+            st.bar_chart(freq_resultados_home)
             
             # Goleadas da Casa (Home)
-            goleadas_home = resultados[
-                (resultados['FT_Goals_H'] - resultados['FT_Goals_A']) >= 4
+            goleadas_home = resultados_home[
+                (resultados_home['FT_Goals_H'] - resultados_home['FT_Goals_A']) >= 4
             ]
-            st.write(f"**Goleadas em Casa ({len(goleadas_home)}):**")
+            st.write(f"**Goleadas Home ({len(goleadas_home)}):**")
             st.dataframe(goleadas_home)
             
+            # **Análise para a Equipe Visitante (Away)**
+            st.subheader(f"Frequência de Resultados - {adversario} (Away)")
+            resultados_away = base_filtrada[base_filtrada['Away'] == adversario]
+            resultados_away['Resultado'] = resultados_away.apply(lambda row: f"{row['FT_Goals_H']}x{row['FT_Goals_A']}", axis=1)
+            freq_resultados_away = resultados_away['Resultado'].value_counts()
+            st.bar_chart(freq_resultados_away)
+            
             # Goleadas do Visitante (Away)
-            goleadas_away = resultados[
-                (resultados['FT_Goals_A'] - resultados['FT_Goals_H']) >= 4
+            goleadas_away = resultados_away[
+                (resultados_away['FT_Goals_A'] - resultados_away['FT_Goals_H']) >= 4
             ]
-            st.write(f"**Goleadas Sofridas ({len(goleadas_away)}):**")
+            st.write(f"**Goleadas Away ({len(goleadas_away)}):**")
             st.dataframe(goleadas_away)
-
-# Executar o dashboard
-if __name__ == "__main__":
-    show_analise_correct_score()
