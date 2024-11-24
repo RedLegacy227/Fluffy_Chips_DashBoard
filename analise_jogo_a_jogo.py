@@ -58,8 +58,8 @@ def show_analise_jogo_a_jogo():
     
     if not jogos_do_dia.empty:
         # Remover as colunas indesejadas e exibir
-        jogos_do_dia_display = jogos_do_dia.drop(columns=['index', 'Nº'], errors='ignore')
-        st.dataframe(jogos_do_dia_display)
+        
+        st.dataframe(jogos_do_dia)
 
     base_dados = read_base_de_dados()
     
@@ -115,15 +115,10 @@ def show_analise_jogo_a_jogo():
                 st.dataframe(row[colunas_selecionadas_jogo])
                 # Histórico de Confrontos Diretos
                 st.subheader(f"Histórico de Confrontos Diretos entre {equipe_selecionada} e {adversario}")
-                colunas_confrontos = [
-                    "Date", "League", "Season", "Home", "Away", "HT_Goals_H", "HT_Goals_A", "FT_Goals_H", "FT_Goals_A",
-                    "FT_Odd_H", "FT_Odd_D", "FT_Odd_A", "HT_Odd_Over05", "HT_Odd_Under05", "FT_Odd_Over05",
-                    "FT_Odd_Under05", "FT_Odd_Over15", "FT_Odd_Under15", "FT_Odd_Over25", "FT_Odd_Under25",
-                    "Odd_BTTS_Yes", "Odd_BTTS_No", "Goals_Minutes_Home", "Goals_Minutes_Away"
-                ]
+                
                 h2h = base_dados[(base_dados['Home'] == equipe_selecionada) & (base_dados['Away'] == adversario)].sort_values(by='Date', ascending=False)
                 if not h2h.empty:
-                    st.dataframe(h2h[colunas_confrontos])
+                    st.dataframe(h2h)
                 else:
                     st.write("Nenhum confronto direto encontrado.")
                 
@@ -133,7 +128,7 @@ def show_analise_jogo_a_jogo():
                     (base_dados['Home'] == equipe_selecionada)
                 ].sort_values(by='Date', ascending=False).head(5)
                 if not ultimos_jogos_casa.empty:
-                    st.dataframe(ultimos_jogos_casa[colunas_confrontos])
+                    st.dataframe(ultimos_jogos_casa)
                 else:
                     st.write("Nenhum jogo recente encontrado.")
                 
@@ -143,7 +138,7 @@ def show_analise_jogo_a_jogo():
                     (base_dados['Away'] == adversario)
                 ].sort_values(by='Date', ascending=False).head(5)
                 if not ultimos_jogos_visitante.empty:
-                    st.dataframe(ultimos_jogos_visitante[colunas_confrontos])
+                    st.dataframe(ultimos_jogos_visitante)
                 else:
                     st.write("Nenhum jogo recente encontrado.")
                 
@@ -159,7 +154,7 @@ def show_analise_jogo_a_jogo():
                     (base_dados['FT_Odd_A'].between(odd_away - odd_margin, odd_away + odd_margin))
                 ].sort_values(by='Date', ascending=False)
                 if not jogos_odds_semelhantes.empty:
-                    st.dataframe(jogos_odds_semelhantes[colunas_confrontos])
+                    st.dataframe(jogos_odds_semelhantes)
                 else:
                     st.write("Nenhum jogo passado com odds semelhantes encontrado.")
 
