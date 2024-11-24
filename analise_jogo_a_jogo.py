@@ -43,7 +43,11 @@ def show_analise_jogo_a_jogo():
     # Carregar dados
     st.subheader("Jogos do Dia")
     jogos_do_dia = read_jogos(dia)
-    st.dataframe(jogos_do_dia)
+    
+    if not jogos_do_dia.empty:
+        # Remover as colunas indesejadas e exibir
+        jogos_do_dia_display = jogos_do_dia.drop(columns=['index', 'Nº'], errors='ignore')
+        st.dataframe(jogos_do_dia_display)
 
     base_dados = read_base_de_dados()
     
@@ -61,16 +65,17 @@ def show_analise_jogo_a_jogo():
                 adversario = row['Away']
                 st.write(f"**Jogo Selecionado:** {equipe_selecionada} vs {adversario}")
                 
-                # Exibir todos os dados do jogo selecionado
+                # Exibir todos os dados do jogo selecionado (sem as colunas 'index' e 'Nº')
                 st.subheader("Dados do Jogo Selecionado")
-                st.dataframe(pd.DataFrame([row]))
+                jogo_detalhes = pd.DataFrame([row]).drop(columns=['index', 'Nº'], errors='ignore')
+                st.dataframe(jogo_detalhes)
                 
                 # Histórico de Confrontos Diretos
                 st.subheader(f"Histórico de Confrontos Diretos entre {equipe_selecionada} e {adversario}")
                 h2h = base_dados[
                     (base_dados['Home'] == equipe_selecionada) & 
                     (base_dados['Away'] == adversario)
-                ].sort_values(by='Date', ascending=False)
+                ].sort_values(by='Date', ascending=False).drop(columns=['index', 'Nº'], errors='ignore')
                 if not h2h.empty:
                     st.dataframe(h2h)
                 else:
@@ -80,7 +85,7 @@ def show_analise_jogo_a_jogo():
                 st.subheader(f"Últimos 5 jogos da equipe da casa ({equipe_selecionada})")
                 ultimos_jogos_casa = base_dados[
                     (base_dados['Home'] == equipe_selecionada)
-                ].sort_values(by='Date', ascending=False).head(5)
+                ].sort_values(by='Date', ascending=False).head(5).drop(columns=['index', 'Nº'], errors='ignore')
                 if not ultimos_jogos_casa.empty:
                     st.dataframe(ultimos_jogos_casa)
                 else:
@@ -90,7 +95,7 @@ def show_analise_jogo_a_jogo():
                 st.subheader(f"Últimos 5 jogos da equipe visitante ({adversario})")
                 ultimos_jogos_visitante = base_dados[
                     (base_dados['Away'] == adversario)
-                ].sort_values(by='Date', ascending=False).head(5)
+                ].sort_values(by='Date', ascending=False).head(5).drop(columns=['index', 'Nº'], errors='ignore')
                 if not ultimos_jogos_visitante.empty:
                     st.dataframe(ultimos_jogos_visitante)
                 else:
@@ -106,8 +111,9 @@ def show_analise_jogo_a_jogo():
                     (base_dados['Away'] == adversario) &
                     (base_dados['FT_Odd_H'].between(odd_home - odd_margin, odd_home + odd_margin)) &
                     (base_dados['FT_Odd_A'].between(odd_away - odd_margin, odd_away + odd_margin))
-                ].sort_values(by='Date', ascending=False)
+                ].sort_values(by='Date', ascending=False).drop(columns=['index', 'Nº'], errors='ignore')
                 if not jogos_odds_semelhantes.empty:
                     st.dataframe(jogos_odds_semelhantes)
                 else:
                     st.write("Nenhum jogo passado com odds semelhantes encontrado.")
+
