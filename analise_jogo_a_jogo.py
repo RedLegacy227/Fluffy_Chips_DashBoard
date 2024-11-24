@@ -85,12 +85,12 @@ def show_analise_jogo_a_jogo():
                 adversario = row['Away']
                 st.write(f"**Jogo Selecionado:** {equipe_selecionada} vs {adversario}")
 
-                # Exibir dados completos do jogo selecionado
+                # **Dados do Jogo Selecionado**
                 st.subheader("Dados do Jogo Selecionado")
                 jogo_selecionado_df = row.to_frame().T  # Converter para DataFrame horizontal
                 display_table_with_aggrid(jogo_selecionado_df)
 
-                # Histórico de Confrontos Diretos
+                # **Histórico de Confrontos Diretos**
                 st.subheader(f"Histórico de Confrontos Diretos entre {equipe_selecionada} e {adversario}")
                 h2h = base_dados[
                     (base_dados['Home'] == equipe_selecionada) & (base_dados['Away'] == adversario)
@@ -100,7 +100,7 @@ def show_analise_jogo_a_jogo():
                 else:
                     st.write("Nenhum confronto direto encontrado.")
 
-                # Últimos 5 jogos da equipe da casa
+                # **Últimos 5 jogos da equipe da casa**
                 st.subheader(f"Últimos 5 jogos da equipe da casa ({equipe_selecionada})")
                 ultimos_jogos_casa = base_dados[
                     (base_dados['Home'] == equipe_selecionada)
@@ -110,7 +110,7 @@ def show_analise_jogo_a_jogo():
                 else:
                     st.write("Nenhum jogo recente encontrado.")
 
-                # Últimos 5 jogos da equipe visitante
+                # **Últimos 5 jogos da equipe visitante**
                 st.subheader(f"Últimos 5 jogos da equipe visitante ({adversario})")
                 ultimos_jogos_visitante = base_dados[
                     (base_dados['Away'] == adversario)
@@ -120,7 +120,7 @@ def show_analise_jogo_a_jogo():
                 else:
                     st.write("Nenhum jogo recente encontrado.")
 
-                # Jogos Passados com Odds Semelhantes
+                # **Jogos Passados com Odds Semelhantes**
                 st.subheader(f"Jogos Passados com Odds Semelhantes ({equipe_selecionada} vs {adversario})")
                 odd_home = row['FT_Odd_H']
                 odd_away = row['FT_Odd_A']
