@@ -44,11 +44,20 @@ def read_base_de_dados():
         base_dados = pd.DataFrame()  # Retorna DataFrame vazio no caso de erro
     return base_dados
 
-# Função para exibir tabelas com ajuste automático de colunas
+# Função para exibir tabelas com ajuste automático de altura e centralização
 def display_table_with_aggrid(dataframe):
-    """Exibe o DataFrame com ajuste automático de colunas usando AgGrid."""
+    """Exibe o DataFrame com ajuste automático de colunas, altura e alinhamento central."""
     gb = GridOptionsBuilder.from_dataframe(dataframe)
-    gb.configure_default_column(resizable=True, autoSizeColumns=True, wrapText=True)
+    
+    # Configurar alinhamento central
+    gb.configure_default_column(
+        resizable=True, autoSizeColumns=True, wrapText=True, 
+        cellStyle={'textAlign': 'center'}  # Alinhamento central
+    )
+    
+    # Ajustar altura automaticamente
+    gb.configure_grid_options(domLayout='autoHeight')  # Altura dinâmica
+
     grid_options = gb.build()
 
     AgGrid(dataframe, gridOptions=grid_options, enable_enterprise_modules=False)
