@@ -602,65 +602,65 @@ def show_back():
         df_liga['CV_MO_FT'] = CV_Odds
         df_liga['CV_MO_FT'] = df_liga['CV_MO_FT'].round(4)
         
-        #Predicao de Golos Marcados
-        df_liga['(P)GM_H_2.0'] = (df_liga['Media_CGM_H_02'] - (df_liga['p_H']/2))*2
-        df_liga['(P)GM_H_2.0'] = df_liga['(P)GM_H_2.0'].round(4)
-        df_liga['(P)GM_A_2.0'] = (df_liga['Media_CGM_A_02'] - (df_liga['p_A']/2))*2
-        df_liga['(P)GM_A_2.0'] = df_liga['(P)GM_A_2.0'].round(4)
+        # #Predicao de Golos Marcados
+        # df_liga['(P)GM_H_2.0'] = (df_liga['Media_CGM_H_02'] - (df_liga['p_H']/2))*2
+        # df_liga['(P)GM_H_2.0'] = df_liga['(P)GM_H_2.0'].round(4)
+        # df_liga['(P)GM_A_2.0'] = (df_liga['Media_CGM_A_02'] - (df_liga['p_A']/2))*2
+        # df_liga['(P)GM_A_2.0'] = df_liga['(P)GM_A_2.0'].round(4)
         
-        #Predicao de Golos Sofridos
-        df_liga['(P)GS_H_2.0'] = (df_liga['Media_CGS_H_02'] - (df_liga['p_H']/2))*2
-        df_liga['(P)GS_H_2.0'] = df_liga['(P)GS_H_2.0'].round(4)
-        df_liga['(P)GS_A_2.0'] = (df_liga['Media_CGS_A_02'] - (df_liga['p_A']/2))*2
-        df_liga['(P)GS_A_2.0'] = df_liga['(P)GS_A_2.0'].round(4)
+        # #Predicao de Golos Sofridos
+        # df_liga['(P)GS_H_2.0'] = (df_liga['Media_CGS_H_02'] - (df_liga['p_H']/2))*2
+        # df_liga['(P)GS_H_2.0'] = df_liga['(P)GS_H_2.0'].round(4)
+        # df_liga['(P)GS_A_2.0'] = (df_liga['Media_CGS_A_02'] - (df_liga['p_A']/2))*2
+        # df_liga['(P)GS_A_2.0'] = df_liga['(P)GS_A_2.0'].round(4)
         
-        #Poisson Home Marca
-        df_liga['Poisson_GM_H_0'] = poisson.pmf(0, df_liga['Media_GM_H'])
-        df_liga['Poisson_GM_H_0'] = df_liga['Poisson_GM_H_0'].round(4)
-        df_liga['Poisson_GM_H_1'] = poisson.pmf(1, df_liga['Media_GM_H'])
-        df_liga['Poisson_GM_H_1'] = df_liga['Poisson_GM_H_1'].round(4)
-        df_liga['Poisson_GM_H_2'] = poisson.pmf(2, df_liga['Media_GM_H'])
-        df_liga['Poisson_GM_H_2'] = df_liga['Poisson_GM_H_2'].round(4)
-        df_liga['Poisson_GM_H_3'] = poisson.pmf(3, df_liga['Media_GM_H'])
-        df_liga['Poisson_GM_H_3'] = df_liga['Poisson_GM_H_3'].round(4)
-        df_liga['Poisson_GM_H_4'] = poisson.pmf(4, df_liga['Media_GM_H'])
-        df_liga['Poisson_GM_H_4'] = df_liga['Poisson_GM_H_4'].round(4)
+        # #Poisson Home Marca
+        # df_liga['Poisson_GM_H_0'] = poisson.pmf(0, df_liga['Media_GM_H'])
+        # df_liga['Poisson_GM_H_0'] = df_liga['Poisson_GM_H_0'].round(4)
+        # df_liga['Poisson_GM_H_1'] = poisson.pmf(1, df_liga['Media_GM_H'])
+        # df_liga['Poisson_GM_H_1'] = df_liga['Poisson_GM_H_1'].round(4)
+        # df_liga['Poisson_GM_H_2'] = poisson.pmf(2, df_liga['Media_GM_H'])
+        # df_liga['Poisson_GM_H_2'] = df_liga['Poisson_GM_H_2'].round(4)
+        # df_liga['Poisson_GM_H_3'] = poisson.pmf(3, df_liga['Media_GM_H'])
+        # df_liga['Poisson_GM_H_3'] = df_liga['Poisson_GM_H_3'].round(4)
+        # df_liga['Poisson_GM_H_4'] = poisson.pmf(4, df_liga['Media_GM_H'])
+        # df_liga['Poisson_GM_H_4'] = df_liga['Poisson_GM_H_4'].round(4)
         
-        #Poisson Away Marca
-        df_liga['Poisson_GM_A_0'] = poisson.pmf(0, df_liga['Media_GM_A'])
-        df_liga['Poisson_GM_A_0'] = df_liga['Poisson_GM_A_0'].round(4)
-        df_liga['Poisson_GM_A_1'] = poisson.pmf(1, df_liga['Media_GM_A'])
-        df_liga['Poisson_GM_A_1'] = df_liga['Poisson_GM_A_1'].round(4)
-        df_liga['Poisson_GM_A_2'] = poisson.pmf(2, df_liga['Media_GM_A'])
-        df_liga['Poisson_GM_A_2'] = df_liga['Poisson_GM_A_2'].round(4)
-        df_liga['Poisson_GM_A_3'] = poisson.pmf(3, df_liga['Media_GM_A'])
-        df_liga['Poisson_GM_A_3'] = df_liga['Poisson_GM_A_3'].round(4)
-        df_liga['Poisson_GM_A_4'] = poisson.pmf(4, df_liga['Media_GM_A'])
-        df_liga['Poisson_GM_A_4'] = df_liga['Poisson_GM_A_4'].round(4)
+        # #Poisson Away Marca
+        # df_liga['Poisson_GM_A_0'] = poisson.pmf(0, df_liga['Media_GM_A'])
+        # df_liga['Poisson_GM_A_0'] = df_liga['Poisson_GM_A_0'].round(4)
+        # df_liga['Poisson_GM_A_1'] = poisson.pmf(1, df_liga['Media_GM_A'])
+        # df_liga['Poisson_GM_A_1'] = df_liga['Poisson_GM_A_1'].round(4)
+        # df_liga['Poisson_GM_A_2'] = poisson.pmf(2, df_liga['Media_GM_A'])
+        # df_liga['Poisson_GM_A_2'] = df_liga['Poisson_GM_A_2'].round(4)
+        # df_liga['Poisson_GM_A_3'] = poisson.pmf(3, df_liga['Media_GM_A'])
+        # df_liga['Poisson_GM_A_3'] = df_liga['Poisson_GM_A_3'].round(4)
+        # df_liga['Poisson_GM_A_4'] = poisson.pmf(4, df_liga['Media_GM_A'])
+        # df_liga['Poisson_GM_A_4'] = df_liga['Poisson_GM_A_4'].round(4)
         
-        #Poisson Home Sofre
-        df_liga['Poisson_GS_H_0'] = poisson.pmf(0, df_liga['Media_GS_H'])
-        df_liga['Poisson_GS_H_0'] = df_liga['Poisson_GS_H_0'].round(4)
-        df_liga['Poisson_GS_H_1'] = poisson.pmf(1, df_liga['Media_GS_H'])
-        df_liga['Poisson_GS_H_1'] = df_liga['Poisson_GS_H_1'].round(4)
-        df_liga['Poisson_GS_H_2'] = poisson.pmf(2, df_liga['Media_GS_H'])
-        df_liga['Poisson_GS_H_2'] = df_liga['Poisson_GS_H_2'].round(4)
-        df_liga['Poisson_GS_H_3'] = poisson.pmf(3, df_liga['Media_GS_H'])
-        df_liga['Poisson_GS_H_3'] = df_liga['Poisson_GS_H_3'].round(4)
-        df_liga['Poisson_GS_H_4'] = poisson.pmf(4, df_liga['Media_GS_H'])
-        df_liga['Poisson_GS_H_4'] = df_liga['Poisson_GS_H_4'].round(4)
+        # #Poisson Home Sofre
+        # df_liga['Poisson_GS_H_0'] = poisson.pmf(0, df_liga['Media_GS_H'])
+        # df_liga['Poisson_GS_H_0'] = df_liga['Poisson_GS_H_0'].round(4)
+        # df_liga['Poisson_GS_H_1'] = poisson.pmf(1, df_liga['Media_GS_H'])
+        # df_liga['Poisson_GS_H_1'] = df_liga['Poisson_GS_H_1'].round(4)
+        # df_liga['Poisson_GS_H_2'] = poisson.pmf(2, df_liga['Media_GS_H'])
+        # df_liga['Poisson_GS_H_2'] = df_liga['Poisson_GS_H_2'].round(4)
+        # df_liga['Poisson_GS_H_3'] = poisson.pmf(3, df_liga['Media_GS_H'])
+        # df_liga['Poisson_GS_H_3'] = df_liga['Poisson_GS_H_3'].round(4)
+        # df_liga['Poisson_GS_H_4'] = poisson.pmf(4, df_liga['Media_GS_H'])
+        # df_liga['Poisson_GS_H_4'] = df_liga['Poisson_GS_H_4'].round(4)
         
-        #Poisson Away Sofre
-        df_liga['Poisson_GS_A_0'] = poisson.pmf(0, df_liga['Media_GS_A'])
-        df_liga['Poisson_GS_A_0'] = df_liga['Poisson_GS_A_0'].round(4)
-        df_liga['Poisson_GS_A_1'] = poisson.pmf(1, df_liga['Media_GS_A'])
-        df_liga['Poisson_GS_A_1'] = df_liga['Poisson_GS_A_1'].round(4)
-        df_liga['Poisson_GS_A_2'] = poisson.pmf(2, df_liga['Media_GS_A'])
-        df_liga['Poisson_GS_A_2'] = df_liga['Poisson_GS_A_2'].round(4)
-        df_liga['Poisson_GS_A_3'] = poisson.pmf(3, df_liga['Media_GS_A'])
-        df_liga['Poisson_GS_A_3'] = df_liga['Poisson_GS_A_3'].round(4)
-        df_liga['Poisson_GS_A_4'] = poisson.pmf(4, df_liga['Media_GS_A'])
-        df_liga['Poisson_GS_A_4'] = df_liga['Poisson_GS_A_4'].round(4)
+        # #Poisson Away Sofre
+        # df_liga['Poisson_GS_A_0'] = poisson.pmf(0, df_liga['Media_GS_A'])
+        # df_liga['Poisson_GS_A_0'] = df_liga['Poisson_GS_A_0'].round(4)
+        # df_liga['Poisson_GS_A_1'] = poisson.pmf(1, df_liga['Media_GS_A'])
+        # df_liga['Poisson_GS_A_1'] = df_liga['Poisson_GS_A_1'].round(4)
+        # df_liga['Poisson_GS_A_2'] = poisson.pmf(2, df_liga['Media_GS_A'])
+        # df_liga['Poisson_GS_A_2'] = df_liga['Poisson_GS_A_2'].round(4)
+        # df_liga['Poisson_GS_A_3'] = poisson.pmf(3, df_liga['Media_GS_A'])
+        # df_liga['Poisson_GS_A_3'] = df_liga['Poisson_GS_A_3'].round(4)
+        # df_liga['Poisson_GS_A_4'] = poisson.pmf(4, df_liga['Media_GS_A'])
+        # df_liga['Poisson_GS_A_4'] = df_liga['Poisson_GS_A_4'].round(4)
         
         # Primeiro gol marcado e sofrido
         calcular_primeiro_gol(df_liga, "Goals_Minutes_Home", "primeiro_gol_home")
