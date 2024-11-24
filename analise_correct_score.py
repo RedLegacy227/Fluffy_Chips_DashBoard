@@ -48,15 +48,15 @@ def read_base_de_dados():
 
 # Função principal para a página de análise dos resultados
 def show_analise_correct_score():
-    st.title("Análise de Resultados - Correct Score")
+    """Exibe o painel principal para análise jogo a jogo."""
+    st.title("Fluffy Chips Dashboard")
     
     # Seção: Seleção de Data
     dia = st.date_input("Selecione a data para análise", date.today())
-    
+
     # Carregar dados
     st.subheader("Jogos do Dia")
     jogos_do_dia = read_jogos(dia)
-    st.dataframe(jogos_do_dia)
 
     base_dados = read_base_de_dados()
     
