@@ -13,15 +13,13 @@ st.set_page_config(
     page_title="Fluffy Chips Dashboard", layout="wide"
 )
 
-pages = ["Back Home", "Back Away", "Lay Home", "Lay Away", "Overs / Unders no HT", "Overs / Unders no FT", "BTTS", "Correct Score"]
+pages = ["Back", "Lay", "Overs / Unders no HT", "Overs / Unders no FT", "BTTS", "Correct Score"]
 
 pick = st.sidebar.radio('', pages)
 
-if pick == "Back Home":
+if pick == "Back":
     show_back()
-elif pick == "Lay Home":
-    show_lay()
-elif pick == "Lay Away":
+elif pick == "Lay":
     show_lay()
 elif pick == "Overs / Unders no HT":
     show_overs_unders_ht()
