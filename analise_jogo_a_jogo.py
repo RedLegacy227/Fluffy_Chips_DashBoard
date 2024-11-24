@@ -1,3 +1,4 @@
+from st_aggrid import AgGrid, GridOptionsBuilder
 import pandas as pd
 import streamlit as st
 from datetime import date
@@ -43,6 +44,15 @@ def read_base_de_dados():
         base_dados = pd.DataFrame()  # Retorna DataFrame vazio no caso de erro
     return base_dados
 
+# Função para exibir tabelas com ajuste automático de colunas
+def display_table_with_aggrid(dataframe):
+    """Exibe o DataFrame com ajuste automático de colunas usando AgGrid."""
+    gb = GridOptionsBuilder.from_dataframe(dataframe)
+    gb.configure_default_column(resizable=True, autoSizeColumns=True, wrapText=True)
+    grid_options = gb.build()
+
+    AgGrid(dataframe, gridOptions=grid_options, enable_enterprise_modules=False)
+
 # Main dashboard
 def show_analise_jogo_a_jogo():
     """Exibe o painel principal para análise jogo a jogo."""
@@ -56,8 +66,8 @@ def show_analise_jogo_a_jogo():
     jogos_do_dia = read_jogos(dia)
 
     if not jogos_do_dia.empty:
-        # Exibir jogos do dia com cabeçalhos corrigidos
-        st.dataframe(jogos_do_dia)
+        # Exibir jogos do dia com cabeçalhos corrigidos e ajuste automático
+        display_table_with_aggrid(jogos_do_dia)
 
     base_dados = read_base_de_dados()
 
@@ -78,7 +88,7 @@ def show_analise_jogo_a_jogo():
                 # Exibir dados completos do jogo selecionado
                 st.subheader("Dados do Jogo Selecionado")
                 jogo_selecionado_df = row.to_frame().T  # Converter para DataFrame horizontal
-                st.dataframe(jogo_selecionado_df)
+                display_table_with_aggrid(jogo_selecionado_df)
 
                 # Histórico de Confrontos Diretos
                 st.subheader(f"Histórico de Confrontos Diretos entre {equipe_selecionada} e {adversario}")
@@ -86,7 +96,7 @@ def show_analise_jogo_a_jogo():
                     (base_dados['Home'] == equipe_selecionada) & (base_dados['Away'] == adversario)
                 ].sort_values(by='Date', ascending=False)
                 if not h2h.empty:
-                    st.dataframe(h2h)
+                    display_table_with_aggrid(h2h)
                 else:
                     st.write("Nenhum confronto direto encontrado.")
 
@@ -96,7 +106,7 @@ def show_analise_jogo_a_jogo():
                     (base_dados['Home'] == equipe_selecionada)
                 ].sort_values(by='Date', ascending=False).head(5)
                 if not ultimos_jogos_casa.empty:
-                    st.dataframe(ultimos_jogos_casa)
+                    display_table_with_aggrid(ultimos_jogos_casa)
                 else:
                     st.write("Nenhum jogo recente encontrado.")
 
@@ -106,7 +116,7 @@ def show_analise_jogo_a_jogo():
                     (base_dados['Away'] == adversario)
                 ].sort_values(by='Date', ascending=False).head(5)
                 if not ultimos_jogos_visitante.empty:
-                    st.dataframe(ultimos_jogos_visitante)
+                    display_table_with_aggrid(ultimos_jogos_visitante)
                 else:
                     st.write("Nenhum jogo recente encontrado.")
 
@@ -122,6 +132,6 @@ def show_analise_jogo_a_jogo():
                     (base_dados['FT_Odd_A'].between(odd_away - odd_margin, odd_away + odd_margin))
                 ].sort_values(by='Date', ascending=False)
                 if not jogos_odds_semelhantes.empty:
-                    st.dataframe(jogos_odds_semelhantes)
+                    display_table_with_aggrid(jogos_odds_semelhantes)
                 else:
                     st.write("Nenhum jogo passado com odds semelhantes encontrado.")
