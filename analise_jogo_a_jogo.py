@@ -21,8 +21,8 @@ def read_jogos(dia):
         jogos_do_dia = pd.read_csv(file_url)
         
         # Ajustar cabeçalhos e limpar dados
-        jogos_do_dia.columns = jogos_do_dia.iloc[0]  # Usar a primeira linha como cabeçalhos
-        jogos_do_dia = jogos_do_dia[1:]  # Remover a primeira linha de dados (agora é cabeçalho)
+        #jogos_do_dia.columns = jogos_do_dia.iloc[0]  # Usar a primeira linha como cabeçalhos
+        #jogos_do_dia = jogos_do_dia[1:]  # Remover a primeira linha de dados (agora é cabeçalho)
         jogos_do_dia = drop_reset_index(jogos_do_dia)  # Resetar índices e limpar
     except Exception as e:
         st.error(f"Erro ao carregar dados dos jogos do dia: {e}")
