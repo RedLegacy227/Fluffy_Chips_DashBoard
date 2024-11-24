@@ -25,8 +25,20 @@ def read_jogos(dia):
 
 def read_base_de_dados():
     url = "https://raw.githubusercontent.com/RedLegacy227/base_de_dados_fluffy_chips/refs/heads/main/fluffy_chips_2018_2024.csv"
+    colunas_selecionadas = [
+        "Date", "League", "Season", "Home", "Away", "HT_Goals_H", "HT_Goals_A", "FT_Goals_H", "FT_Goals_A",
+        "FT_Odd_H", "FT_Odd_D", "FT_Odd_A", "HT_Odd_Over05", "HT_Odd_Under05", "FT_Odd_Over05", "FT_Odd_Under05",
+        "FT_Odd_Over15", "FT_Odd_Under15", "FT_Odd_Over25", "FT_Odd_Under25", "Odd_BTTS_Yes", "Odd_BTTS_No",
+        "Goals_Minutes_Home", "Goals_Minutes_Away",
+    ]
     try:
+        # Carregar base de dados
         base_dados = pd.read_csv(url)
+        
+        # Selecionar apenas as colunas desejadas
+        base_dados = base_dados[colunas_selecionadas]
+        
+        # Resetar índice e remover valores nulos
         base_dados = drop_reset_index(base_dados)
     except Exception as e:
         st.error(f"Erro ao carregar a base de dados: {e}")
