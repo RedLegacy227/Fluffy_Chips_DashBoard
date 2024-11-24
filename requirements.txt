@@ -5,5 +5,4 @@ numpy
 datetime
 plotly.express
 plotly.graph_objects
-matplotlib.pyplot
 seaborn
