@@ -141,17 +141,21 @@ def display_result_frequencies_current_season(df, team, location='Home', dia=Non
             ((df['Season'] == current_season) | (df['Season'] == alternate_season))
         ].sort_values(by='Date', ascending=False)
     display_result_section("Temporada Atual", filtered_games, team, location)
+    
 # Exibir a legenda dos resultados para jogos em casa das equipes selecionadas
 def display_home_and_away_results(df_liga1, team, team_games_today):
     """Exibe resultados lado a lado para jogos em casa e fora."""
-    
-    # Resultados de Home
-    display_result_section(f"Temporada Atual {team}", df_liga1, team, location='Home')
+    # Criar duas colunas para a exibição lado a lado
+    col1, col2 = st.columns(2)
 
-    # Dividir a exibição em colunas para Home e Away
-    
-    for opponent in team_games_today['Away'].unique():
-        display_result_section(f"Temporada Atual{opponent}", df_liga1, opponent, location='Away')
+    # Exibir os últimos 20 jogos em casa
+    with col1:
+        display_home_and_away_results(f"{team}", df_liga1, team, location='Home')
+
+    # Exibir os últimos 20 jogos fora para cada adversário
+    with col2:
+        for opponent in team_games_today['Away'].unique():
+            display_home_and_away_results(f"{opponent}", df_liga1, opponent, location='Away')
 
 def display_last_3_seasons_side_by_side(df_liga1, team, team_games_today):
     """Exibe os últimos 20 jogos de casa e fora lado a lado no Streamlit."""
@@ -245,19 +249,23 @@ def show_analise_correct_score():
             jogos_equipe_casa = jogos_do_dia[jogos_do_dia['Home'] == equipe_selecionada]
 
             # Resultados gerais: Home e Away
-            
+            st.markdown("<h2 style='text-align: center;'>Resultados Verificados no Total da Base de Dados</h2>", unsafe_allow_html=True)
+            st.markdown("")
             display_home_and_away_results(base_dados, equipe_selecionada, jogos_equipe_casa)
 
-            # Últimos 20 jogos: Home e Away
-            
+            # 3 Temporadas: Home e Away
+            st.markdown("<h2 style='text-align: center;'>Resultados Verificados nas Últimas 3 Temporadas</h2>", unsafe_allow_html=True)
+            st.markdown("")
             display_last_3_seasons_side_by_side(base_dados, equipe_selecionada, jogos_equipe_casa)
 
-            # Últimos 10 jogos: Home e Away
-            
+            # 2 Temporadas: Home e Away
+            st.markdown("<h2 style='text-align: center;'>Resultados Verificados nas Últimas 2 Temporadas</h2>", unsafe_allow_html=True)
+            st.markdown("")
             display_last_2_seasons_side_by_side(base_dados, equipe_selecionada, jogos_equipe_casa)
 
             # Temporada atual: Home e Away
-            
+            st.markdown("<h2 style='text-align: center;'>Resultados Verificados na Temporada Atual</h2>", unsafe_allow_html=True)
+            st.markdown("")
             display_current_season_side_by_side(base_dados, equipe_selecionada, jogos_equipe_casa, dia)
 
     else:
