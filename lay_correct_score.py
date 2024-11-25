@@ -100,7 +100,7 @@ def filter_lay_1x0(df_jogos_do_dia):
     Lay_1x0 = drop_reset_index(Lay_1x0)
     return Lay_1x0
 
-def show_correct_score():
+def show_lay_correct_score():
     st.title("Fluffy Chips Dashboard")
 
     # User selects the date
