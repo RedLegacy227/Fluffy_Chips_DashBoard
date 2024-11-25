@@ -151,7 +151,7 @@ def display_home_and_away_results(df_liga1, team, team_games_today):
     for opponent in team_games_today['Away'].unique():
         display_result_section("Temporada Atual", df_liga1, opponent, location='Away')
 
-def display_last_20_games_side_by_side(df_liga1, team, team_games_today):
+def display_last_3_seasons_side_by_side(df_liga1, team, team_games_today):
     """Exibe os últimos 20 jogos de casa e fora lado a lado no Streamlit."""
 
     # Criar duas colunas para a exibição lado a lado
@@ -166,7 +166,7 @@ def display_last_20_games_side_by_side(df_liga1, team, team_games_today):
         for opponent in team_games_today['Away'].unique():
             display_result_frequencies_3_seasons(df_liga1, opponent, location='Away')
 
-def display_last_10_games_side_by_side(df_liga1, team, team_games_today):
+def display_last_2_seasons_side_by_side(df_liga1, team, team_games_today):
     """Exibe os últimos 10 jogos de casa e fora lado a lado no Streamlit."""
 
     # Criar duas colunas para a exibição lado a lado
@@ -174,7 +174,7 @@ def display_last_10_games_side_by_side(df_liga1, team, team_games_today):
 
     # Exibir os últimos 10 jogos em casa
     with col1:
-        display_result_frequencies_current_season(df_liga1, team, location='Home')
+        display_result_frequencies_2_seasons(df_liga1, team, location='Home')
 
     # Exibir os últimos 10 jogos fora para cada adversário
     with col2:
