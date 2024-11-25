@@ -15,7 +15,7 @@ st.set_page_config(
     page_title="Fluffy Chips Dashboard", layout="wide"
 )
 
-pages = ["Back", "Lay", "Overs / Unders no HT", "Overs / Unders no FT", "BTTS", "Correct Score", "Análise Jogo a Jogo", " Análise Correct Score"]
+pages = ["Back", "Lay", "Overs / Unders no HT", "Overs / Unders no FT", "BTTS", "Correct Score", "Análise Jogo a Jogo", "Análise Correct Score"]
 
 pick = st.sidebar.radio('', pages)
 
