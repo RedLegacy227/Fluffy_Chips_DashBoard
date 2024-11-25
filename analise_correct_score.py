@@ -46,13 +46,13 @@ def read_base_de_dados():
 
 # Função para contar e exibir a legenda dos resultados com mensagens personalizadas
 def display_result_frequencies_with_message(df, team, location='Home'):
-    """Exibe frequência de resultados com mensagens personalizadas no Streamlit."""
+    """Exibe frequência de resultados com mensagens personalizadas e separa goleadas detalhadamente no Streamlit."""
     if location == 'Home':
         filtered_games = df[df['Home'] == team]
         result_column = ['FT_Goals_H', 'FT_Goals_A']
     else:
         filtered_games = df[df['Away'] == team]
-        result_column = ['FT_Goals_A', 'FT_Goals_H']
+        result_column = ['FT_Goals_H', 'FT_Goals_A']
     
     # Calcula a frequência dos resultados
     filtered_games['Resultado'] = filtered_games.apply(lambda row: f"{row[result_column[0]]}x{row[result_column[1]]}", axis=1)
@@ -69,9 +69,7 @@ def display_result_frequencies_with_message(df, team, location='Home'):
     ]
     
     # Exibição no Streamlit
-    st.markdown("")
-    st.markdown (f"{team} - {num_games} jogos analisados")
-    st.markdown("")
+    st.markdown(f"<h3 style='text-align: center;'><strong>{team} - {num_games} jogos analisados</strong></h3>", unsafe_allow_html=True)
     for result in target_results:
         count = result_counts.get(result, 0)
         if count == 0:
@@ -85,24 +83,42 @@ def display_result_frequencies_with_message(df, team, location='Home'):
         else:
             message = f"<span style='background-color: #f5c6cb; color: #491217; padding: 5px; border-radius: 5px;'>Não Entrar ({count})</span>"
         st.markdown(f"**Resultado {result}:** {message}", unsafe_allow_html=True)
-    
-    # Contagem de goleadas (vitórias com 4 ou mais gols de diferença)
-    goleadas = filtered_games[
-        (filtered_games[result_column[0]] - filtered_games[result_column[1]]).abs() >= 4
+
+    # Goleadas: Separação detalhada
+    goleadas_home_win = filtered_games[
+        (filtered_games[result_column[0]] - filtered_games[result_column[1]]) >= 4
     ]
-    goleada_count = len(goleadas)
+    goleadas_home_defeat = filtered_games[
+        (filtered_games[result_column[1]] - filtered_games[result_column[0]]) >= 4
+    ]
+    outro_qualquer_empate = filtered_games[
+        (filtered_games[result_column[0]] == filtered_games[result_column[1]]) & 
+        (filtered_games[result_column[0]] >= 4)
+    ]
     
-    if goleada_count == 0:
-        goleada_message = f"<span style='background-color: #d4edda; color: #155724; padding: 5px; border-radius: 5px;'>Limpinho ({goleada_count})</span>"
-    elif 1 <= goleada_count <= 3:
-        goleada_message = f"<span style='background-color: #c3e6cb; color: #0b5124; padding: 5px; border-radius: 5px;'>Favorável ({goleada_count})</span>"
-    elif 4 <= goleada_count <= 7:
-        goleada_message = f"<span style='background-color: #fff3cd; color: #856404; padding: 5px; border-radius: 5px;'>Cuidado ({goleada_count})</span>"
-    elif 8 <= goleada_count <= 10:
-        goleada_message = f"<span style='background-color: #f8d7da; color: #721c24; padding: 5px; border-radius: 5px;'>Muito Cuidado ({goleada_count})</span>"
-    else:
-        goleada_message = f"<span style='background-color: #f5c6cb; color: #491217; padding: 5px; border-radius: 5px;'>Não Entrar ({goleada_count})</span>"
-    st.markdown(f"**Goleadas:** {goleada_message}", unsafe_allow_html=True)
+    # Contagens das goleadas
+    goleada_home_win_count = len(goleadas_home_win)
+    goleada_home_defeat_count = len(goleadas_home_defeat)
+    empate_outro_count = len(outro_qualquer_empate)
+    
+    # Exibição no Streamlit
+    st.markdown(f"**Goleada Home (Win):** {goleada_home_win_count}")
+    st.markdown(f"**Goleada Home (Defeat):** {goleada_home_defeat_count}")
+    st.markdown(f"**Outro Qualquer Empate:** {empate_outro_count}")
+
+    if location == 'Away':
+        goleadas_away_win = filtered_games[
+            (filtered_games[result_column[1]] - filtered_games[result_column[0]]) >= 4
+        ]
+        goleadas_away_defeat = filtered_games[
+            (filtered_games[result_column[0]] - filtered_games[result_column[1]]) >= 4
+        ]
+        goleada_away_win_count = len(goleadas_away_win)
+        goleada_away_defeat_count = len(goleadas_away_defeat)
+        
+        st.markdown(f"**Goleada Away (Win):** {goleada_away_win_count}")
+        st.markdown(f"**Goleada Away (Defeat):** {goleada_away_defeat_count}")
+        
 # Função para exibir resultados com título formatado
 def display_result_section(title, df, team, location='Home'):
     display_result_frequencies_with_message(df, team, location)
