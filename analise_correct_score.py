@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 from datetime import date
 
-# Helper functions
+# Funções auxiliares
 def drop_reset_index(df):
     """Remove valores nulos e redefine o índice."""
     df = df.dropna()
@@ -44,82 +44,87 @@ def read_base_de_dados():
         base_dados = pd.DataFrame()  # Retorna DataFrame vazio no caso de erro
     return base_dados
 
-# Função para exibir tabelas com ajuste automático de altura e centralização
+def calculate_results(df):
+    """Calcula os resultados baseados nos gols de cada partida."""
+    df['Resultado'] = df.apply(lambda row: f"{row['FT_Goals_H']}x{row['FT_Goals_A']}", axis=1)
+    return df
+
 def display_table_with_aggrid(dataframe):
     """Exibe o DataFrame com ajuste automático de colunas, altura e alinhamento central."""
     gb = GridOptionsBuilder.from_dataframe(dataframe)
-    
-    # Configurar alinhamento central
     gb.configure_default_column(
-        resizable=True, autoSizeColumns=True, wrapText=True, 
+        resizable=True, autoSizeColumns=True, wrapText=True,
         cellStyle={'textAlign': 'center'}  # Alinhamento central
     )
-    
-    # Ajustar altura automaticamente
     gb.configure_grid_options(domLayout='autoHeight')  # Altura dinâmica
 
     grid_options = gb.build()
-
     AgGrid(dataframe, gridOptions=grid_options, enable_enterprise_modules=False)
+
+def display_result_frequencies_with_message(df, team, location='Home'):
+    """Exibe frequência de resultados com mensagens personalizadas."""
+    if location == 'Home':
+        filtered_games = df[df['Home'] == team]
+        result_column = ['FT_Goals_H', 'FT_Goals_A']
+    else:
+        filtered_games = df[df['Away'] == team]
+        result_column = ['FT_Goals_H', 'FT_Goals_A']
     
-# Função principal para a página de análise dos resultados
+    # Calcula a frequência dos resultados
+    filtered_games['Resultado'] = filtered_games.apply(lambda row: f"{row[result_column[0]]}x{row[result_column[1]]}", axis=1)
+    result_counts = filtered_games['Resultado'].value_counts()
+    
+    # Contagem de jogos analisados
+    num_games = len(filtered_games)
+    
+    st.subheader(f"Frequência de Resultados ({location}) - {team}")
+    st.write(f"**Total de jogos analisados: {num_games}**")
+    
+    # Exibir frequência de resultados
+    for result, count in result_counts.items():
+        st.write(f"Resultado **{result}**: {count} vezes")
+    
+    # Identificar goleadas
+    goleadas = filtered_games[(filtered_games[result_column[0]] - filtered_games[result_column[1]]).abs() >= 4]
+    goleada_count = len(goleadas)
+    st.write(f"**Goleadas: {goleada_count} jogos**")
+    st.dataframe(goleadas)
+
+# Função principal
 def show_analise_correct_score():
-    """Exibe o painel principal para análise do correct score."""
-    st.title("Fluffy Chips Dashboard")
+    """Exibe a análise no Streamlit."""
+    st.title("Análise de Resultados - Correct Score")
     
-    # Seção: Seleção de Data
-    dia = st.date_input("Selecione a data para análise", date.today())
-
-    # Carregar dados
-    st.subheader("Jogos do Dia")
+    # Carregar os jogos do dia e a base de dados principal
+    dia = st.date_input("Selecione a data para análise:", date.today())
     jogos_do_dia = read_jogos(dia)
+    df_base = read_base_de_dados()
 
-    base_dados = read_base_de_dados()
+    if jogos_do_dia.empty or df_base.empty:
+        st.warning("Nenhum jogo ou dados históricos disponíveis para análise.")
+        return
+
+    # Calcular resultados para a base
+    df_base = calculate_results(df_base)
+
+    # Criar lista de equipes únicas
+    home_teams = sorted(jogos_do_dia['Home'].unique())
     
-    if not jogos_do_dia.empty and not base_dados.empty:
-        # Filtrar dados da base até o dia anterior ao selecionado
-        dia_anterior = pd.to_datetime(dia) - pd.Timedelta(days=1)
-        base_filtrada = base_dados[pd.to_datetime(base_dados['Date']) <= dia_anterior]
-        
-        # Seleção da Equipe para Análise
-        st.subheader("Selecione a equipe para análise detalhada")
-        equipes_casa = jogos_do_dia['Home'].unique()
-        equipe_selecionada = st.selectbox("Equipe da Casa:", sorted(equipes_casa))
+    # Selecionar equipe da casa
+    selected_team = st.selectbox("Selecione a equipe da casa:", home_teams)
     
-    if equipe_selecionada:
-        # Exibir Jogos do Dia para a Equipe Selecionada
-        st.subheader(f"Jogos do Dia para {equipe_selecionada}")
-        jogos_equipe_casa = jogos_do_dia[jogos_do_dia['Home'] == equipe_selecionada]
-        st.dataframe(jogos_equipe_casa)
+    if selected_team:
+        st.header(f"Análise da equipe: {selected_team}")
         
-        for index, jogo in jogos_equipe_casa.iterrows():
-            adversario = jogo['Away']
-            st.write(f"**Analisando Jogo: {equipe_selecionada} (Home) vs {adversario} (Away)**")
-            
-            # **Análise para a Equipe da Casa (Home)**
-            st.subheader(f"Frequência de Resultados - {equipe_selecionada} (Home)")
-            resultados_home = base_filtrada[base_filtrada['Home'] == equipe_selecionada]
-            resultados_home['Resultado'] = resultados_home.apply(lambda row: f"{row['FT_Goals_H']}x{row['FT_Goals_A']}", axis=1)
-            freq_resultados_home = resultados_home['Resultado'].value_counts()
-            st.bar_chart(freq_resultados_home)
-            
-            # Goleadas da Casa (Home)
-            goleadas_home = resultados_home[
-                (resultados_home['FT_Goals_H'] - resultados_home['FT_Goals_A']) >= 4
-            ]
-            st.write(f"**Goleadas Home ({len(goleadas_home)}):**")
-            st.dataframe(goleadas_home)
-            
-            # **Análise para a Equipe Visitante (Away)**
-            st.subheader(f"Frequência de Resultados - {adversario} (Away)")
-            resultados_away = base_filtrada[base_filtrada['Away'] == adversario]
-            resultados_away['Resultado'] = resultados_away.apply(lambda row: f"{row['FT_Goals_H']}x{row['FT_Goals_A']}", axis=1)
-            freq_resultados_away = resultados_away['Resultado'].value_counts()
-            st.bar_chart(freq_resultados_away)
-            
-            # Goleadas do Visitante (Away)
-            goleadas_away = resultados_away[
-                (resultados_away['FT_Goals_A'] - resultados_away['FT_Goals_H']) >= 4
-            ]
-            st.write(f"**Goleadas Away ({len(goleadas_away)}):**")
-            st.dataframe(goleadas_away)
+        # Exibir jogos do dia
+        st.subheader("Jogos do Dia")
+        team_games_today = jogos_do_dia[jogos_do_dia['Home'] == selected_team]
+        display_table_with_aggrid(team_games_today)
+        
+        # Exibir frequências de resultados
+        display_result_frequencies_with_message(df_base, selected_team, location='Home')
+
+        # Últimos jogos da equipe selecionada
+        st.subheader(f"Últimos jogos da equipe {selected_team}")
+        recent_games = df_base[df_base['Home'] == selected_team].sort_values(by='Date', ascending=False).head(5)
+        display_table_with_aggrid(recent_games)
