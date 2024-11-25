@@ -147,7 +147,7 @@ def display_home_and_away_results(df_liga1, team, team_games_today):
     display_result_section(f"Temporada Atual {team}", df_liga1, team, location='Home')
 
     # Dividir a exibição em colunas para Home e Away
-    st.subheader(f"Temporada Atual {opponent}")
+    
     for opponent in team_games_today['Away'].unique():
         display_result_section("Temporada Atual", df_liga1, opponent, location='Away')
 
