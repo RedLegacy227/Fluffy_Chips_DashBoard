@@ -5,17 +5,19 @@ from datetime import date
 
 # Helper functions
 def drop_reset_index(df):
+    """Remove valores nulos e redefine o índice."""
     df = df.dropna()
     df = df.reset_index(drop=True)
     df.index += 1
     return df
 
 def read_jogos(dia):
+    """Carrega os jogos do dia a partir de um arquivo remoto."""
     dia_str = dia.strftime('%Y-%m-%d')
     base_url = "https://raw.githubusercontent.com/RedLegacy227/df_jogos_do_dia/refs/heads/main/"
     file_name = f"df_jogos_do_dia_{dia_str}.csv"
     file_url = base_url + file_name
-    
+
     try:
         jogos_do_dia = pd.read_csv(file_url)
         jogos_do_dia = drop_reset_index(jogos_do_dia)
@@ -25,6 +27,7 @@ def read_jogos(dia):
     return jogos_do_dia
 
 def read_base_de_dados():
+    """Carrega a base de dados principal com colunas selecionadas."""
     url = "https://raw.githubusercontent.com/RedLegacy227/base_de_dados_fluffy_chips/refs/heads/main/fluffy_chips_2018_2024.csv"
     colunas_selecionadas = [
         "Date", "League", "Season", "Home", "Away", "HT_Goals_H", "HT_Goals_A", "FT_Goals_H", "FT_Goals_A",
@@ -33,22 +36,35 @@ def read_base_de_dados():
         "Goals_Minutes_Home", "Goals_Minutes_Away",
     ]
     try:
-        # Carregar base de dados
         base_dados = pd.read_csv(url)
-        
-        # Selecionar apenas as colunas desejadas
         base_dados = base_dados[colunas_selecionadas]
-        
-        # Resetar índice e remover valores nulos
         base_dados = drop_reset_index(base_dados)
     except Exception as e:
         st.error(f"Erro ao carregar a base de dados: {e}")
         base_dados = pd.DataFrame()  # Retorna DataFrame vazio no caso de erro
     return base_dados
 
+# Função para exibir tabelas com ajuste automático de altura e centralização
+def display_table_with_aggrid(dataframe):
+    """Exibe o DataFrame com ajuste automático de colunas, altura e alinhamento central."""
+    gb = GridOptionsBuilder.from_dataframe(dataframe)
+    
+    # Configurar alinhamento central
+    gb.configure_default_column(
+        resizable=True, autoSizeColumns=True, wrapText=True, 
+        cellStyle={'textAlign': 'center'}  # Alinhamento central
+    )
+    
+    # Ajustar altura automaticamente
+    gb.configure_grid_options(domLayout='autoHeight')  # Altura dinâmica
+
+    grid_options = gb.build()
+
+    AgGrid(dataframe, gridOptions=grid_options, enable_enterprise_modules=False)
+    
 # Função principal para a página de análise dos resultados
 def show_analise_correct_score():
-    """Exibe o painel principal para análise jogo a jogo."""
+    """Exibe o painel principal para análise do correct score."""
     st.title("Fluffy Chips Dashboard")
     
     # Seção: Seleção de Data
