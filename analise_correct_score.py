@@ -52,7 +52,7 @@ def display_result_frequencies_with_message(df, team, location='Home'):
         result_column = ['FT_Goals_H', 'FT_Goals_A']
     else:
         filtered_games = df[df['Away'] == team]
-        result_column = ['FT_Goals_H', 'FT_Goals_A']
+        result_column = ['FT_Goals_A', 'FT_Goals_H']
     
     # Calcula a frequência dos resultados
     filtered_games['Resultado'] = filtered_games.apply(lambda row: f"{row[result_column[0]]}x{row[result_column[1]]}", axis=1)
