@@ -149,7 +149,7 @@ def display_home_and_away_results(df_liga1, team, team_games_today):
     # Dividir a exibição em colunas para Home e Away
     
     for opponent in team_games_today['Away'].unique():
-        display_result_section("Temporada Atual", df_liga1, opponent, location='Away')
+        display_result_section(f"Temporada Atual{opponent}", df_liga1, opponent, location='Away')
 
 def display_last_3_seasons_side_by_side(df_liga1, team, team_games_today):
     """Exibe os últimos 20 jogos de casa e fora lado a lado no Streamlit."""
@@ -178,7 +178,6 @@ def display_last_2_seasons_side_by_side(df_liga1, team, team_games_today):
 
     # Exibir os últimos 10 jogos fora para cada adversário
     with col2:
-        st.markdown(f"<h3 style='text-align: center;'>Últimos 10 Jogos - Away</h3>", unsafe_allow_html=True)
         for opponent in team_games_today['Away'].unique():
             st.markdown(f"**Adversário: {opponent}**")
 def display_current_season_side_by_side(df_liga1, team, team_games_today, dia):
@@ -238,9 +237,7 @@ def show_analise_correct_score():
         # Carregar a base de dados principal
         base_dados = read_base_de_dados()
 
-        if not base_dados.empty and equipe_selecionada:
-            st.header(f"Análise da Equipe: {equipe_selecionada}")
-            
+        if not base_dados.empty and equipe_selecionada:            
             # Filtrar jogos do dia para a equipe selecionada
             jogos_equipe_casa = jogos_do_dia[jogos_do_dia['Home'] == equipe_selecionada]
 
@@ -250,11 +247,11 @@ def show_analise_correct_score():
 
             # Últimos 20 jogos: Home e Away
             
-            display_last_20_games_side_by_side(base_dados, equipe_selecionada, jogos_equipe_casa)
+            display_last_3_seasons_side_by_side(base_dados, equipe_selecionada, jogos_equipe_casa)
 
             # Últimos 10 jogos: Home e Away
             
-            display_last_10_games_side_by_side(base_dados, equipe_selecionada, jogos_equipe_casa)
+            display_last_2_seasons_side_by_side(base_dados, equipe_selecionada, jogos_equipe_casa)
 
             # Temporada atual: Home e Away
             
