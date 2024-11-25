@@ -69,7 +69,7 @@ def display_result_frequencies_with_message(df, team, location='Home'):
     ]
     
     # Exibição no Streamlit
-    st.markdown(f"<h3 style='text-align: center;'><strong>{team} - {num_games} jogos analisados</strong></h3>", unsafe_allow_html=True)
+    st.markdown(f"{team} - {num_games} jogos analisados")
     for result in target_results:
         count = result_counts.get(result, 0)
         if count == 0:
@@ -103,26 +103,24 @@ def display_result_frequencies_with_message(df, team, location='Home'):
     st.markdown(f"**Goleadas:** {goleada_message}", unsafe_allow_html=True)
 # Função para exibir resultados com título formatado
 def display_result_section(title, df, team, location='Home'):
-    """Exibe resultados com título formatado no Streamlit."""
-    st.markdown(f"<h2 style='text-align: center;'><strong>{title}</strong></h2>", unsafe_allow_html=True)
     display_result_frequencies_with_message(df, team, location)
 
 # Funções de exibição para diferentes filtros
-def display_result_frequencies_last_20_games(df, team, location='Home'):
-    """Exibe os últimos 20 jogos em 3 temporadas."""
+def display_result_frequencies_3_seasons(df, team, location='Home'):
+    """Exibe os resultados nas últimas 3 temporadas."""
     if location == 'Home':
         filtered_games = df[df['Home'] == team].sort_values(by='Date', ascending=False).head(114)
     else:
         filtered_games = df[df['Away'] == team].sort_values(by='Date', ascending=False).head(114)
-    display_result_section("3 Temporadas - Últimos 20 Jogos", filtered_games, team, location)
+    display_result_section("3 Temporadas", filtered_games, team, location)
 
-def display_result_frequencies_last_10_games(df, team, location='Home'):
-    """Exibe os últimos 10 jogos em 2 temporadas."""
+def display_result_frequencies_2_seasons(df, team, location='Home'):
+    """Exibe os resultados nas últimas 2 temporadas."""
     if location == 'Home':
         filtered_games = df[df['Home'] == team].sort_values(by='Date', ascending=False).head(76)
     else:
         filtered_games = df[df['Away'] == team].sort_values(by='Date', ascending=False).head(76)
-    display_result_section("2 Temporadas - Últimos 10 Jogos", filtered_games, team, location)
+    display_result_section("2 Temporadas", filtered_games, team, location)
 
 def display_result_frequencies_current_season(df, team, location='Home', dia=None):
     """Exibe os jogos da temporada atual."""
@@ -146,69 +144,56 @@ def display_home_and_away_results(df_liga1, team, team_games_today):
     """Exibe resultados lado a lado para jogos em casa e fora."""
     
     # Resultados de Home
-    st.subheader("Resultados - Todos os Jogos (Home)")
-    display_result_section("Todos os Jogos (Home)", df_liga1, team, location='Home')
+    display_result_section(f"Temporada Atual {team}", df_liga1, team, location='Home')
 
     # Dividir a exibição em colunas para Home e Away
-    st.subheader("Resultados por Adversário (Away)")
+    st.subheader(f"Temporada Atual {opponent}")
     for opponent in team_games_today['Away'].unique():
-        st.markdown(f"**Adversário: {opponent}**")
-        display_result_section("Todos os Jogos (Away)", df_liga1, opponent, location='Away')
+        display_result_section("Temporada Atual", df_liga1, opponent, location='Away')
 
 def display_last_20_games_side_by_side(df_liga1, team, team_games_today):
     """Exibe os últimos 20 jogos de casa e fora lado a lado no Streamlit."""
-    st.subheader("Últimos 20 Jogos - Casa e Fora")
 
     # Criar duas colunas para a exibição lado a lado
     col1, col2 = st.columns(2)
 
     # Exibir os últimos 20 jogos em casa
     with col1:
-        st.markdown(f"<h3 style='text-align: center;'>Últimos 20 Jogos - Home</h3>", unsafe_allow_html=True)
-        display_result_frequencies_last_20_games(df_liga1, team, location='Home')
+        display_result_frequencies_3_seasons(df_liga1, team, location='Home')
 
     # Exibir os últimos 20 jogos fora para cada adversário
     with col2:
-        st.markdown(f"<h3 style='text-align: center;'>Últimos 20 Jogos - Away</h3>", unsafe_allow_html=True)
         for opponent in team_games_today['Away'].unique():
-            st.markdown(f"**Adversário: {opponent}**")
-            display_result_frequencies_last_20_games(df_liga1, opponent, location='Away')
+            display_result_frequencies_3_seasons(df_liga1, opponent, location='Away')
 
 def display_last_10_games_side_by_side(df_liga1, team, team_games_today):
     """Exibe os últimos 10 jogos de casa e fora lado a lado no Streamlit."""
-    st.subheader("Últimos 10 Jogos - Casa e Fora")
 
     # Criar duas colunas para a exibição lado a lado
     col1, col2 = st.columns(2)
 
     # Exibir os últimos 10 jogos em casa
     with col1:
-        st.markdown(f"<h3 style='text-align: center;'>Últimos 10 Jogos - Home</h3>", unsafe_allow_html=True)
-        display_result_frequencies_last_10_games(df_liga1, team, location='Home')
+        display_result_frequencies_current_season(df_liga1, team, location='Home')
 
     # Exibir os últimos 10 jogos fora para cada adversário
     with col2:
         st.markdown(f"<h3 style='text-align: center;'>Últimos 10 Jogos - Away</h3>", unsafe_allow_html=True)
         for opponent in team_games_today['Away'].unique():
             st.markdown(f"**Adversário: {opponent}**")
-            display_result_frequencies_last_10_games(df_liga1, opponent, location='Away')
 def display_current_season_side_by_side(df_liga1, team, team_games_today, dia):
     """Exibe os jogos da temporada atual de casa e fora lado a lado no Streamlit."""
-    st.subheader("Jogos da Temporada Atual - Casa e Fora")
 
     # Criar duas colunas para a exibição lado a lado
     col1, col2 = st.columns(2)
 
     # Exibir os jogos da temporada atual em casa
     with col1:
-        st.markdown(f"<h3 style='text-align: center;'>Temporada Atual - Home</h3>", unsafe_allow_html=True)
         display_result_frequencies_current_season(df_liga1, team, location='Home', dia=dia)
 
     # Exibir os jogos da temporada atual fora para cada adversário
     with col2:
-        st.markdown(f"<h3 style='text-align: center;'>Temporada Atual - Away</h3>", unsafe_allow_html=True)
         for opponent in team_games_today['Away'].unique():
-            st.markdown(f"**Adversário: {opponent}**")
             display_result_frequencies_current_season(df_liga1, opponent, location='Away', dia=dia)
             
 def display_table_with_aggrid(dataframe):
@@ -260,19 +245,19 @@ def show_analise_correct_score():
             jogos_equipe_casa = jogos_do_dia[jogos_do_dia['Home'] == equipe_selecionada]
 
             # Resultados gerais: Home e Away
-            st.subheader("Resultados Gerais")
+            
             display_home_and_away_results(base_dados, equipe_selecionada, jogos_equipe_casa)
 
             # Últimos 20 jogos: Home e Away
-            st.subheader("Últimos 20 Jogos")
+            
             display_last_20_games_side_by_side(base_dados, equipe_selecionada, jogos_equipe_casa)
 
             # Últimos 10 jogos: Home e Away
-            st.subheader("Últimos 10 Jogos")
+            
             display_last_10_games_side_by_side(base_dados, equipe_selecionada, jogos_equipe_casa)
 
             # Temporada atual: Home e Away
-            st.subheader("Temporada Atual")
+            
             display_current_season_side_by_side(base_dados, equipe_selecionada, jogos_equipe_casa, dia)
 
     else:
