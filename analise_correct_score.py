@@ -69,7 +69,9 @@ def display_result_frequencies_with_message(df, team, location='Home'):
     ]
     
     # Exibição no Streamlit
-    st.markdown(f"{team} - {num_games} jogos analisados")
+    st.markdown("")
+    st.markdown (f"{team} - {num_games} jogos analisados")
+    st.markdown("")
     for result in target_results:
         count = result_counts.get(result, 0)
         if count == 0:
@@ -179,7 +181,8 @@ def display_last_2_seasons_side_by_side(df_liga1, team, team_games_today):
     # Exibir os últimos 10 jogos fora para cada adversário
     with col2:
         for opponent in team_games_today['Away'].unique():
-            st.markdown(f"**Adversário: {opponent}**")
+            display_result_frequencies_2_seasons(df_liga1, opponent, location='Away')
+            
 def display_current_season_side_by_side(df_liga1, team, team_games_today, dia):
     """Exibe os jogos da temporada atual de casa e fora lado a lado no Streamlit."""
 
