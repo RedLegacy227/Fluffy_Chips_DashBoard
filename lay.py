@@ -48,8 +48,8 @@ def filter_lay_home(df_jogos_do_dia):
     Lay_Home = df[
         (df['FT_Odd_A'] <= 2.5) & 
         (df['FT_Odd_H'].between(3, 10)) &
-        (df['Med_Power_Ranking_Away'] > 250) & 
-        (df['Med_Power_Ranking_Home'] < 250) &
+        (df['Med_Power_Ranking_Away'] > df['Med_Power_Ranking_Home'] ) &
+        ((df["Med_Power_Ranking_Away"] - df["Med_Power_Ranking_Home"])>= 15) &
         (df['Media_CGM_Away_01'] > 3.6) & 
         (df['Media_CGM_Away_02'] >= 1) & 
         (df['CV_CGM_Away_01'] < 0.6)
@@ -80,8 +80,8 @@ def filter_lay_away(df_jogos_do_dia):
     Lay_Away = df[
         (df['FT_Odd_H'] <= 2.5) & 
         (df['FT_Odd_A'].between(3, 10)) &
-        (df['Med_Power_Ranking_Home'] > 250) & 
-        (df['Med_Power_Ranking_Away'] < 250) &
+        (df['Med_Power_Ranking_Home'] > df['Med_Power_Ranking_Away'] ) &
+        ((df["Med_Power_Ranking_Home"] - df["Med_Power_Ranking_Away"])>= 15) &
         (df['Media_CGM_Home_01'] > 3.6) & 
         (df['Media_CGM_Home_02'] >= 1) & 
         (df['CV_CGM_Home_01'] < 0.6)
