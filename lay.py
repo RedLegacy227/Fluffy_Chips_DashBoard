@@ -40,7 +40,7 @@ def filter_lay_home(df_jogos_do_dia):
         'Porc_Sofreu_Primeiro_Golo_Away', 'Porc_Marcou_Primeiro_Golo_Home_1P','Porc_Marcou_Primeiro_Golo_Away_1P',
         'Porc_Sofreu_Primeiro_Golo_Home_1P', 'Porc_Sofreu_Primeiro_Golo_Away_1P', 'Porc_BTTS_Y_Home','Porc_BTTS_Y_Away',
         'Porc_Home_Win_HT', 'Porc_Away_Win_HT', 'Porc_Home_Win_FT', 'Porc_Away_Win_FT','Porc_Score_Min_1G_Home',
-        'Porc_Score_Min_1G_Away', 'Porc_Took_Min_1G_Home', 'Porc_Took_Min_1G_Away',
+        'Porc_Score_Min_1G_Away', 'Porc_Took_Min_1G_Home', 'Porc_Took_Min_1G_Away','Media_SG_Home', 'Media_SG_Away', 'CV_SG_Home', 'CV_SG_Away'
     ]
     df = df_jogos_do_dia.loc[:, selected_columns]
 
@@ -71,7 +71,7 @@ def filter_lay_away(df_jogos_do_dia):
         'Porc_Sofreu_Primeiro_Golo_Away', 'Porc_Marcou_Primeiro_Golo_Home_1P','Porc_Marcou_Primeiro_Golo_Away_1P',
         'Porc_Sofreu_Primeiro_Golo_Home_1P', 'Porc_Sofreu_Primeiro_Golo_Away_1P', 'Porc_BTTS_Y_Home','Porc_BTTS_Y_Away',
         'Porc_Home_Win_HT', 'Porc_Away_Win_HT', 'Porc_Home_Win_FT', 'Porc_Away_Win_FT','Porc_Score_Min_1G_Home',
-        'Porc_Score_Min_1G_Away', 'Porc_Took_Min_1G_Home', 'Porc_Took_Min_1G_Away',
+        'Porc_Score_Min_1G_Away', 'Porc_Took_Min_1G_Home', 'Porc_Took_Min_1G_Away', 'Media_SG_Home', 'Media_SG_Away', 'CV_SG_Home', 'CV_SG_Away'
     ]
     df = df_jogos_do_dia.loc[:, selected_columns]
 
