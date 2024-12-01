@@ -46,13 +46,12 @@ def filter_lay_home(df_jogos_do_dia):
 
     # Apply Lay Home filters
     Lay_Home = df[
-        (df['FT_Odd_A'] <= 2.5) & 
-        (df['FT_Odd_H'].between(3, 10)) &
+        #(df['FT_Odd_A'] <= 2.5) & 
+        #(df['FT_Odd_H'].between(3, 10)) &
         (df['Med_Power_Ranking_Away'] > df['Med_Power_Ranking_Home'] ) &
-        ((df["Med_Power_Ranking_Away"] - df["Med_Power_Ranking_Home"])>= 15) &
-        (df['Media_CGM_Away_01'] > 3.6) & 
-        (df['Media_CGM_Away_02'] >= 1) & 
-        (df['CV_CGM_Away_01'] < 0.6)
+        ((df["Med_Power_Ranking_Away"] - df["Med_Power_Ranking_Home"]) > 20) &
+        (df['Media_SG_Away'] > df['Media_SG_Home']) & (df['CV_SG_Away'] <= 0.7) 
+        (df['Media_CGM_Away_02'] >= 0.9) & (df['CV_CGM_Away_02'] < 0.7)
     ]
     Lay_Home = Lay_Home.sort_values(by='Time', ascending=True)
     Lay_Home = drop_reset_index(Lay_Home)
@@ -78,13 +77,12 @@ def filter_lay_away(df_jogos_do_dia):
 
     # Apply Lay Away filters (customize as needed)
     Lay_Away = df[
-        (df['FT_Odd_H'] <= 2.5) & 
-        (df['FT_Odd_A'].between(3, 10)) &
+        #(df['FT_Odd_H'] <= 2.5) & 
+        #(df['FT_Odd_A'].between(3, 10)) &
         (df['Med_Power_Ranking_Home'] > df['Med_Power_Ranking_Away'] ) &
-        ((df["Med_Power_Ranking_Home"] - df["Med_Power_Ranking_Away"])>= 15) &
-        (df['Media_CGM_Home_01'] > 3.6) & 
-        (df['Media_CGM_Home_02'] >= 1) & 
-        (df['CV_CGM_Home_01'] < 0.6)
+        ((df["Med_Power_Ranking_Home"] - df["Med_Power_Ranking_Away"])> 15) &
+        (df['Media_SG_Home'] > df['Media_SG_Away']) & (df['CV_SG_Home'] <= 0.7) 
+        (df['Media_CGM_Home_02'] >= 0.9) & (df['CV_CGM_Home_02'] < 0.7)
     ]
     Lay_Away = Lay_Away.sort_values(by='Time', ascending=True)
     Lay_Away = drop_reset_index(Lay_Away)
